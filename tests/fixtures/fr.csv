@@ -1,0 +1,4 @@
+Ticket;Symbole;Type;Lots;Ouverture;Prix entrée;Clôture;Prix sortie;Commission;Swap;Profit
+9001;EURUSD;Buy;0,10;20/11/2026 10:15;1,08512;20/11/2026 13:40;1,08790;-0,70;0;27,80
+9002;BTCUSD;Sell;0,01;21/11/2026 08:00;96 500,00;21/11/2026 12:00;95 900,00;-1,00;0;6,00
+bad;;;;;;;;;;

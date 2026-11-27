@@ -23,6 +23,8 @@ npm run dev
 
 Puis ouvrez http://localhost:3000.
 
+Tests : `npm test` (lecture des exports MetaTrader/CSV et calculs statistiques).
+
 ## Ce qui existe (étape 1 : fondations)
 
 - Page d'accueil
