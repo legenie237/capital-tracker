@@ -3,6 +3,8 @@ import Link from "next/link";
 import { DashboardView } from "@/components/dashboard-view";
 import { TradeTable } from "@/components/trades/trade-table";
 import { demoTrades } from "@/lib/demo-data";
+import { CoachView } from "@/components/coach/coach-view";
+import { DEMO_REVIEW } from "@/lib/coach/demo-review";
 
 export const metadata: Metadata = {
   title: "Démo · Capital Tracker",
@@ -35,6 +37,15 @@ export default function DemoPage() {
           <p className="mt-1 text-sm text-muted">3 mois de trading fictif, avec un risque fixe de 50 par trade.</p>
         </div>
         <DashboardView trades={trades} />
+        <div className="pt-4">
+          <h2 className="text-xl font-semibold">Coach IA</h2>
+          <p className="mt-1 text-sm text-muted">Chaque semaine, le coach lit ton journal et te dit quoi corriger. Exemple de bilan :</p>
+        </div>
+        <CoachView
+          demo
+          reviews={[{ id: "demo", created_at: "2026-11-27T18:00:00Z", content: DEMO_REVIEW }]}
+          left={{ bilan: 0, question: 0 }}
+        />
         <h2 className="pt-4 text-xl font-semibold">Derniers trades</h2>
         <TradeTable trades={recent} />
       </main>
