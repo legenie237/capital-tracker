@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
+import { submitKeepingValues } from "@/lib/form";
 import { saveTrade } from "@/app/(app)/trades/actions";
 import { Button, Card, FormMessage } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
@@ -82,7 +83,7 @@ export function TradeForm({
 
   return (
     <Card>
-      <form action={action} className="space-y-6">
+      <form onSubmit={submitKeepingValues(action)} className="space-y-6">
         {trade && <input type="hidden" name="id" value={trade.id} />}
         <input type="hidden" name="tz" value={tz} />
         <input type="hidden" name="screenshots" value={JSON.stringify(shots.map((s) => s.path))} />
