@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { TradeForm } from "@/components/trades/trade-form";
 import { TRADE_COLUMNS } from "@/lib/trades";
 import type { Trade } from "@/lib/types";
-import { deleteTrade } from "../actions";
+import { DeleteTradeButton } from "@/components/trades/delete-trade-button";
 
 export default async function EditTradePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -30,12 +30,7 @@ export default async function EditTradePage({ params }: { params: Promise<{ id: 
         <h1 className="text-2xl font-semibold">
           {trade.symbol} · {trade.direction === "buy" ? "Achat" : "Vente"}
         </h1>
-        <form action={deleteTrade}>
-          <input type="hidden" name="id" value={trade.id} />
-          <button className="rounded-lg border border-danger px-3 py-1.5 text-sm text-danger hover:bg-danger hover:text-white">
-            Supprimer
-          </button>
-        </form>
+        <DeleteTradeButton id={trade.id} />
       </div>
       <TradeForm trade={trade} userId={user.id} existingShots={shots} knownSetups={setups} />
     </div>

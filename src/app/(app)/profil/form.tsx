@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { submitKeepingValues } from "@/lib/form";
 import { updateProfile } from "./actions";
 import { Button, Card, Field, FormMessage } from "@/components/ui";
 import type { Profile } from "@/lib/types";
@@ -9,7 +10,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
   const [state, action, pending] = useActionState(updateProfile, undefined);
   return (
     <Card>
-      <form action={action} className="space-y-4">
+      <form onSubmit={submitKeepingValues(action)} className="space-y-4">
         <Field label="Nom d'utilisateur" name="username" defaultValue={profile.username} required />
         <Field label="Nom complet" name="full_name" defaultValue={profile.full_name ?? ""} />
         <label className="block space-y-1 text-sm">
