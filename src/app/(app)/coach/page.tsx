@@ -1,11 +1,39 @@
 import { createClient } from "@/lib/supabase/server";
 import { CoachView, type SavedReview } from "@/components/coach/coach-view";
 import { COACH_LIMITS } from "@/lib/coach/limits";
+import Link from "next/link";
+import { Card } from "@/components/ui";
+import { accessOf, hasAccess } from "@/lib/billing";
+import type { Profile } from "@/lib/types";
 
 export const metadata = { title: "Coach IA – Capital Tracker" };
 
 export default async function CoachPage() {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, subscription_until, created_at")
+    .eq("id", user!.id)
+    .single<Pick<Profile, "role" | "subscription_until" | "created_at">>();
+  if (!profile || !hasAccess(accessOf(profile))) {
+    return (
+      <div className="max-w-xl space-y-6">
+        <h1 className="text-2xl font-semibold">Coach IA</h1>
+        <Card className="space-y-3">
+          <p className="text-lg font-semibold">Le coach IA est réservé aux abonnés.</p>
+          <p className="text-muted">
+            Ton essai gratuit est terminé. Abonne-toi pour 2 500 FCFA/mois et retrouve ton bilan de la semaine et tes questions au coach.
+          </p>
+          <Link href="/abonnement" className="inline-block rounded-lg bg-accent px-4 py-2 font-semibold text-black">
+            Voir l&apos;abonnement
+          </Link>
+        </Card>
+      </div>
+    );
+  }
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
   const [{ data: reviews }, { data: usage }] = await Promise.all([

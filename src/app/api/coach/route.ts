@@ -2,6 +2,8 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 import { buildCoachContext, COACH_TRADE_COLUMNS, type CoachTrade } from "@/lib/coach/context";
 import { CHAT_PROMPT, REVIEW_PROMPT } from "@/lib/coach/prompts";
+import { accessOf, hasAccess } from "@/lib/billing";
+import type { Profile } from "@/lib/types";
 import { COACH_LIMITS, COACH_MODEL, MAX_HISTORY, MAX_QUESTION, type CoachKind } from "@/lib/coach/limits";
 
 export const runtime = "nodejs";
@@ -35,6 +37,15 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return fail(401, "Connecte-toi pour utiliser le coach.");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, subscription_until, created_at")
+    .eq("id", user.id)
+    .single<Pick<Profile, "role" | "subscription_until" | "created_at">>();
+  if (!profile || !hasAccess(accessOf(profile))) {
+    return fail(402, "Ton essai gratuit est terminé : abonne-toi (2 500 FCFA/mois) pour continuer avec le coach.");
+  }
 
   if (!process.env.ANTHROPIC_API_KEY) {
     return fail(503, "Le coach IA n'est pas encore activé sur ce site (clé ANTHROPIC_API_KEY manquante).");

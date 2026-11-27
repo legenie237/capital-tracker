@@ -2,11 +2,14 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "../(auth)/actions";
+import { accessOf, daysLeft } from "@/lib/billing";
+import type { Profile } from "@/lib/types";
 
 const NAV = [
   { href: "/dashboard", label: "Tableau de bord" },
   { href: "/trades", label: "Journal" },
   { href: "/coach", label: "Coach IA" },
+  { href: "/abonnement", label: "Abonnement" },
   { href: "/profil", label: "Profil" },
 ];
 
@@ -17,7 +20,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   } = await supabase.auth.getUser();
   if (!user) redirect("/connexion");
 
-  const { data: profile } = await supabase.from("profiles").select("username").eq("id", user.id).single();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("username, role, subscription_until, created_at")
+    .eq("id", user.id)
+    .single<Pick<Profile, "username" | "role" | "subscription_until" | "created_at">>();
+  const access = profile ? accessOf(profile) : null;
 
   return (
     <div className="min-h-screen">
@@ -32,6 +40,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 {item.label}
               </Link>
             ))}
+            {profile?.role === "admin" && (
+              <Link href="/admin/paiements" className="text-accent hover:underline">
+                Admin
+              </Link>
+            )}
             <span className="hidden text-muted sm:inline">@{profile?.username}</span>
             <form action={signOut}>
               <button className="text-muted hover:text-danger">Déconnexion</button>
@@ -39,6 +52,22 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </nav>
         </div>
       </header>
+      {access?.kind === "trial" && (
+        <div className="bg-accent/15 px-4 py-2 text-center text-sm">
+          Essai gratuit : encore {daysLeft(access.until)} jour(s).{" "}
+          <Link href="/abonnement" className="font-semibold text-accent underline">
+            S&apos;abonner (2 500 FCFA/mois)
+          </Link>
+        </div>
+      )}
+      {access?.kind === "none" && (
+        <div className="bg-danger/15 px-4 py-2 text-center text-sm">
+          Ton essai est terminé : le coach IA est en pause.{" "}
+          <Link href="/abonnement" className="font-semibold underline">
+            Réactiver pour 2 500 FCFA/mois
+          </Link>
+        </div>
+      )}
       <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
     </div>
   );
