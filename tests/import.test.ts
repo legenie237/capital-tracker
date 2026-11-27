@@ -57,3 +57,10 @@ test("nombres et dates", () => {
   assert.equal(parseDate("2026.11.20 14:32:10"), "2026-11-20T14:32:10");
   assert.equal(parseDate("20/11/2026"), "2026-11-20T00:00:00");
 });
+
+test("rapport de synthèse MT5 (onglet Rapports) détecté", async () => {
+  const { isMt5SummaryReport } = await import("../src/lib/import/parse");
+  const synthese = '<!DOCTYPE html><html><head><script>window.__report = {"account":{"name":"x"}}</script></head><body><div id="app"></div></body></html>';
+  assert.equal(isMt5SummaryReport(synthese), true);
+  assert.equal(isMt5SummaryReport(readFileSync(new URL("./fixtures/mt5.html", import.meta.url), "utf8")), false);
+});

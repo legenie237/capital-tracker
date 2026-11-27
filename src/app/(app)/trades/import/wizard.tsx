@@ -7,6 +7,7 @@ import {
   CSV_FIELDS,
   decodeFile,
   parseImport,
+  isMt5SummaryReport,
   tradesFromCsv,
   type CsvField,
   type CsvMapping,
@@ -36,6 +37,13 @@ export function ImportWizard() {
       return setError("Les fichiers Excel ne sont pas encore lus : enregistrez le rapport en HTML (MetaTrader) ou en CSV.");
     }
     const text = decodeFile(await file.arrayBuffer());
+    if (isMt5SummaryReport(text)) {
+      setParsed(null);
+      return setError(
+        "Ce fichier est le « Rapport » de synthèse de MetaTrader 5 : il contient seulement des graphiques, pas la liste de tes trades. " +
+          "Dans MetaTrader 5, ouvre la Boîte à outils (Ctrl+T), onglet Historique, fais un clic droit > Rapport > HTML, puis importe ce fichier-là.",
+      );
+    }
     const result = parseImport(text);
     setFileName(file.name);
     setParsed(result);
@@ -82,7 +90,7 @@ export function ImportWizard() {
         <div className="mt-3 grid gap-4 text-sm text-muted md:grid-cols-3">
           <div>
             <p className="font-medium text-foreground">MetaTrader 5</p>
-            <p>Onglet <b>Historique</b> → clic droit → <b>Rapport</b> → <b>HTML</b>. Choisissez la période (par exemple « Tout l&apos;historique »).</p>
+            <p>Onglet <b>Historique</b> → clic droit → <b>Rapport</b> → <b>HTML</b>. Choisissez la période (par exemple « Tout l&apos;historique »). Attention : le menu <b>Rapports</b> de MT5 ne contient que des graphiques, il ne sert pas ici.</p>
           </div>
           <div>
             <p className="font-medium text-foreground">MetaTrader 4</p>
