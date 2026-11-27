@@ -30,9 +30,14 @@ export default async function TradesPage({ searchParams }: { searchParams: Promi
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold">Journal de trades</h1>
-        <Link href="/trades/nouveau" className="rounded-lg bg-accent px-4 py-2 font-semibold text-black hover:opacity-90">
-          + Nouveau trade
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/trades/import" className="rounded-lg border border-border px-4 py-2 font-semibold hover:border-accent">
+            Importer
+          </Link>
+          <Link href="/trades/nouveau" className="rounded-lg bg-accent px-4 py-2 font-semibold text-black hover:opacity-90">
+            + Nouveau trade
+          </Link>
+        </div>
       </div>
 
       <form className="flex flex-wrap items-end gap-3">
@@ -63,7 +68,8 @@ export default async function TradesPage({ searchParams }: { searchParams: Promi
       {trades.length === 0 ? (
         <Card>
           <p className="text-muted">
-            Aucun trade ici. <Link href="/trades/nouveau" className="text-accent">Ajoutez votre premier trade</Link>.
+            Aucun trade ici. <Link href="/trades/nouveau" className="text-accent">Ajoutez votre premier trade</Link> ou{" "}
+            <Link href="/trades/import" className="text-accent">importez votre historique MetaTrader ou CSV</Link>.
           </p>
         </Card>
       ) : (
