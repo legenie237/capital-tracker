@@ -5,6 +5,7 @@ import { signOut } from "../(auth)/actions";
 
 const NAV = [
   { href: "/dashboard", label: "Tableau de bord" },
+  { href: "/trades", label: "Journal" },
   { href: "/profil", label: "Profil" },
 ];
 

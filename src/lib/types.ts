@@ -14,7 +14,6 @@ export type Profile = {
 
 export type Trade = {
   id: string;
-  user_id: string;
   symbol: string;
   direction: "buy" | "sell";
   status: "open" | "closed";
@@ -24,9 +23,14 @@ export type Trade = {
   take_profit: number | null;
   lot_size: number | null;
   pnl: number | null;
+  fees: number;
   risk_amount: number | null;
   opened_at: string;
   closed_at: string | null;
   setup: string | null;
+  session: string | null;
+  emotions: string[] | null;
+  followed_plan: boolean | null;
   notes: string | null;
+  screenshots: string[];
 };
