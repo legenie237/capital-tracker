@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/session";
 import { TradeForm } from "@/components/trades/trade-form";
 import { TRADE_COLUMNS } from "@/lib/trades";
 import type { Trade } from "@/lib/types";
@@ -8,9 +9,7 @@ import { DeleteTradeButton } from "@/components/trades/delete-trade-button";
 export default async function EditTradePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   if (!user) redirect("/connexion");
 
   const { data: trade } = await supabase.from("trades").select(TRADE_COLUMNS).eq("id", id).maybeSingle<Trade>();

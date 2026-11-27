@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getMyProfile, getSessionUser } from "@/lib/supabase/session";
 import { Card } from "@/components/ui";
 import { PayPanel } from "@/components/billing/pay-panel";
 import { STATUS_LABEL, accessOf, daysLeft, formatFcfa } from "@/lib/billing";
 import { cryptoEnabled } from "@/lib/payments/nowpayments";
-import type { Profile } from "@/lib/types";
 
 export const metadata = { title: "Abonnement – Capital Tracker" };
 
@@ -13,13 +13,11 @@ const fmt = (d: Date | string) => new Date(d).toLocaleDateString("fr-FR", { day:
 export default async function AbonnementPage({ searchParams }: { searchParams: Promise<{ crypto?: string }> }) {
   const { crypto } = await searchParams;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   if (!user) redirect("/connexion");
 
-  const [{ data: profile }, { data: payments }] = await Promise.all([
-    supabase.from("profiles").select("role, subscription_until, created_at").eq("id", user.id).single<Pick<Profile, "role" | "subscription_until" | "created_at">>(),
+  const [profile, { data: payments }] = await Promise.all([
+    getMyProfile(),
     supabase
       .from("payments")
       .select("id, method, operator, reference, months, amount_fcfa, status, admin_note, created_at")

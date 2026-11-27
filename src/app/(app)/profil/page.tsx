@@ -1,16 +1,12 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import type { Profile } from "@/lib/types";
+import { getMyProfile, getSessionUser } from "@/lib/supabase/session";
 import { ProfileForm } from "./form";
 import { accessOf } from "@/lib/billing";
 
 export default async function ProfilePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   if (!user) redirect("/connexion");
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single<Profile>();
+  const profile = await getMyProfile();
   if (!profile) return <p className="text-danger">Profil introuvable.</p>;
 
   return (
