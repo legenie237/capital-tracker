@@ -197,6 +197,10 @@ export default function Home() {
           <Link href="/a-propos" className="hover:text-foreground">
             À propos
           </Link>{" "}
+          ·{" "}
+          <a href="/telechargement/capital-tracker.apk" download className="hover:text-foreground">
+            Appli Android
+          </a>{" "}
           · © {new Date().getFullYear()} Capital Tracker · Le trading comporte des risques de perte en capital.
         </footer>
       </main>
