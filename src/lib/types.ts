@@ -31,6 +31,7 @@ export type Trade = {
   session: string | null;
   emotions: string[] | null;
   followed_plan: boolean | null;
+  mistakes: string[];
   notes: string | null;
   screenshots: string[];
 };

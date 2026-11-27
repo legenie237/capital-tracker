@@ -3,7 +3,7 @@ import type { Trade } from "./types";
 export type StatTrade = Pick<
   Trade,
   "pnl" | "fees" | "risk_amount" | "status" | "opened_at" | "closed_at" | "symbol" | "setup" | "session" | "followed_plan"
->;
+> & { mistakes?: string[] | null };
 
 export type Breakdown = { key: string; count: number; winRate: number; net: number };
 
@@ -25,22 +25,27 @@ export type Stats = {
   maxLossStreak: number;
   planRate: number | null;
   equity: { date: string; value: number }[];
+  results: { date: string; net: number }[];
   bySymbol: Breakdown[];
   bySession: Breakdown[];
   bySetup: Breakdown[];
   byWeekday: Breakdown[];
+  byMistake: Breakdown[];
+  cleanNet: number;
+  cleanCount: number;
 };
 
 const WEEKDAYS = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
 export const netOf = (t: Pick<Trade, "pnl" | "fees">) => (t.pnl ?? 0) - (t.fees ?? 0);
 
-function breakdown(trades: StatTrade[], keyOf: (t: StatTrade) => string | null): Breakdown[] {
+function breakdown(trades: StatTrade[], keyOf: (t: StatTrade) => string | string[] | null): Breakdown[] {
   const groups = new Map<string, StatTrade[]>();
   for (const t of trades) {
     const k = keyOf(t);
-    if (!k) continue;
-    groups.set(k, [...(groups.get(k) ?? []), t]);
+    for (const key of Array.isArray(k) ? k : k ? [k] : []) {
+      groups.set(key, [...(groups.get(key) ?? []), t]);
+    }
   }
   return [...groups.entries()]
     .map(([key, list]) => ({
@@ -86,6 +91,8 @@ export function computeStats(all: StatTrade[]): Stats {
     maxLossStreak = Math.max(maxLossStreak, l);
   }
 
+  const clean = closed.filter((t) => !t.mistakes?.length);
+
   const withRisk = closed.filter((t) => t.risk_amount && t.risk_amount > 0);
   const withPlan = closed.filter((t) => t.followed_plan !== null);
 
@@ -107,9 +114,14 @@ export function computeStats(all: StatTrade[]): Stats {
     maxLossStreak,
     planRate: withPlan.length ? (withPlan.filter((t) => t.followed_plan).length / withPlan.length) * 100 : null,
     equity,
+    results: closed.map((t, i) => ({ date: t.closed_at ?? t.opened_at, net: nets[i] })),
     bySymbol: breakdown(closed, (t) => t.symbol),
     bySession: breakdown(closed, (t) => t.session),
     bySetup: breakdown(closed, (t) => t.setup),
     byWeekday: breakdown(closed, (t) => WEEKDAYS[new Date(t.opened_at).getDay()]),
+    // Les erreurs les plus coûteuses d'abord
+    byMistake: breakdown(closed, (t) => t.mistakes ?? null).sort((a, b) => a.net - b.net),
+    cleanNet: clean.reduce((s, t) => s + netOf(t), 0),
+    cleanCount: clean.length,
   };
 }

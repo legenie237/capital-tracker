@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { saveTrade } from "@/app/(app)/trades/actions";
 import { Button, Card, FormMessage } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
-import { EMOTIONS, SESSIONS } from "@/lib/trades";
+import { EMOTIONS, MISTAKES, SESSIONS } from "@/lib/trades";
 import type { Trade } from "@/lib/types";
 
 const inputCls =
@@ -176,6 +176,18 @@ export function TradeForm({
               <label key={e} className="flex cursor-pointer items-center gap-1 rounded-full border border-border px-3 py-1 has-[:checked]:border-accent has-[:checked]:text-accent">
                 <input type="checkbox" name="emotions" value={e} defaultChecked={trade?.emotions?.includes(e)} className="sr-only" />
                 {e}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset className="space-y-2 text-sm">
+          <legend className="mb-1 text-muted">Erreurs commises (pour mesurer ce qu&apos;elles vous coûtent)</legend>
+          <div className="flex flex-wrap gap-2">
+            {MISTAKES.map((m) => (
+              <label key={m} className="flex cursor-pointer items-center gap-1 rounded-full border border-border px-3 py-1 has-[:checked]:border-danger has-[:checked]:text-danger">
+                <input type="checkbox" name="mistakes" value={m} defaultChecked={trade?.mistakes?.includes(m)} className="sr-only" />
+                {m}
               </label>
             ))}
           </div>
