@@ -6,6 +6,7 @@ import { signOut } from "../(auth)/actions";
 const NAV = [
   { href: "/dashboard", label: "Tableau de bord" },
   { href: "/trades", label: "Journal" },
+  { href: "/coach", label: "Coach IA" },
   { href: "/profil", label: "Profil" },
 ];
 
@@ -25,7 +26,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <Link href="/dashboard" className="font-bold">
             Capital <span className="text-accent">Tracker</span>
           </Link>
-          <nav className="flex items-center gap-4 text-sm">
+          <nav className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm">
             {NAV.map((item) => (
               <Link key={item.href} href={item.href} className="text-muted hover:text-foreground">
                 {item.label}
