@@ -95,6 +95,9 @@ export default function Home() {
             </span>
           </Link>
           <div className="flex items-center gap-4 text-sm">
+            <Link href="/a-propos" className="hidden text-muted hover:text-foreground sm:inline">
+              À propos
+            </Link>
             <Link href="/demo" className="hidden text-muted hover:text-foreground sm:inline">
               Démo
             </Link>
@@ -191,7 +194,10 @@ export default function Home() {
         </section>
 
         <footer className="mt-24 border-t border-white/5 pt-6 text-center text-xs text-muted">
-          © {new Date().getFullYear()} Capital Tracker · Le trading comporte des risques de perte en capital.
+          <Link href="/a-propos" className="hover:text-foreground">
+            À propos
+          </Link>{" "}
+          · © {new Date().getFullYear()} Capital Tracker · Le trading comporte des risques de perte en capital.
         </footer>
       </main>
     </div>
