@@ -336,3 +336,11 @@ export function parseImport(text: string): ParseResult {
   const { trades, skipped } = tradesFromCsv(rows, mapping);
   return { format: "csv", trades, skipped, csv: { headers, rows, mapping } };
 }
+
+/**
+ * Nouveau « Rapport » de MetaTrader 5 (onglet Rapports) : il ne contient que des
+ * statistiques globales (graphiques), pas la liste des trades.
+ */
+export function isMt5SummaryReport(text: string) {
+  return /window\.__report\s*=/.test(text) && !/<table/i.test(text);
+}
