@@ -24,9 +24,9 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // getClaims vérifie le jeton localement (et le rafraîchit s'il a expiré) : pas d'aller-retour réseau à chaque page.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims?.sub ? data.claims : null;
 
   const path = request.nextUrl.pathname;
 

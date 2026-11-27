@@ -1,23 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
+import { getMyProfile } from "@/lib/supabase/session";
 import { CoachView, type SavedReview } from "@/components/coach/coach-view";
 import { COACH_LIMITS } from "@/lib/coach/limits";
 import Link from "next/link";
 import { Card } from "@/components/ui";
 import { accessOf, hasAccess } from "@/lib/billing";
-import type { Profile } from "@/lib/types";
 
 export const metadata = { title: "Coach IA – Capital Tracker" };
 
 export default async function CoachPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, subscription_until, created_at")
-    .eq("id", user!.id)
-    .single<Pick<Profile, "role" | "subscription_until" | "created_at">>();
+  const profile = await getMyProfile();
   if (!profile || !hasAccess(accessOf(profile))) {
     return (
       <div className="max-w-xl space-y-6">

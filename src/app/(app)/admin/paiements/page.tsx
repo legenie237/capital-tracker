@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getMyProfile, getSessionUser } from "@/lib/supabase/session";
 import { Card } from "@/components/ui";
 import { ReviewForm } from "@/components/billing/review-row";
 import { MOBILE_MONEY, STATUS_LABEL, formatFcfa } from "@/lib/billing";
@@ -25,11 +26,9 @@ const opLabel = (id: string | null) => MOBILE_MONEY.operators.find((o) => o.id =
 
 export default async function AdminPaymentsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   if (!user) redirect("/connexion");
-  const { data: me } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  const me = await getMyProfile();
   if (me?.role !== "admin") notFound();
 
   const select = "id, method, operator, phone, reference, months, amount_fcfa, status, admin_note, created_at, profiles!payments_user_id_fkey(username)";

@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getMyProfile, getSessionUser } from "@/lib/supabase/session";
 import { signOut } from "../(auth)/actions";
 import { accessOf, daysLeft } from "@/lib/billing";
 import { SideNav, TabBar } from "@/components/app-nav";
 import { Icons } from "@/components/icons";
-import type { Profile } from "@/lib/types";
 
 function Logo() {
   return (
@@ -21,17 +20,10 @@ function Logo() {
 }
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   if (!user) redirect("/connexion");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("username, role, subscription_until, created_at")
-    .eq("id", user.id)
-    .single<Pick<Profile, "username" | "role" | "subscription_until" | "created_at">>();
+  const profile = await getMyProfile();
   const access = profile ? accessOf(profile) : null;
   const isAdmin = profile?.role === "admin";
 

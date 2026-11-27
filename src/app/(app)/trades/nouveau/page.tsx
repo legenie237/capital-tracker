@@ -1,12 +1,11 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/supabase/session";
 import { TradeForm } from "@/components/trades/trade-form";
 
 export default async function NewTradePage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
   if (!user) redirect("/connexion");
   const { data } = await supabase.from("trades").select("setup").not("setup", "is", null).limit(500);
   const setups = [...new Set((data ?? []).map((r) => r.setup as string))].sort();
