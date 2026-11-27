@@ -11,7 +11,7 @@ Journal de trading en ligne pour aider les traders à progresser : journal, impo
 ## Démarrer en local
 
 1. Créez un projet gratuit sur supabase.com.
-2. Dans **SQL Editor**, exécutez `supabase/migrations/0001_fondations.sql`.
+2. Dans **SQL Editor**, exécutez dans l'ordre les fichiers de `supabase/migrations/` (`0001_fondations.sql`, puis `0002_droits_acces.sql`).
 3. Dans **Authentication > URL Configuration**, ajoutez `http://localhost:3000/auth/callback` aux Redirect URLs.
 4. Copiez `.env.example` en `.env.local` et collez l'URL et la clé `anon` du projet (**Project Settings > API**).
 5. Lancez :
