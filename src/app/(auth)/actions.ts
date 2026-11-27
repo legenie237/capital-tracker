@@ -25,6 +25,9 @@ export async function signIn(_: FormState, formData: FormData): Promise<FormStat
     email: String(formData.get("email") ?? "").trim(),
     password: String(formData.get("password") ?? ""),
   });
+  if (error?.code === "email_not_confirmed")
+    return { error: "Ton email n'est pas encore confirmé : clique sur le lien reçu par email (regarde aussi les spams)." };
+  if (error?.status === 429) return { error: "Trop de tentatives. Attends quelques minutes puis réessaie." };
   if (error) return { error: "Email ou mot de passe incorrect." };
   redirect(safeNext(formData.get("suite")));
 }
