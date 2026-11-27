@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`min-w-0 rounded-xl border border-border bg-surface p-6 ${className}`}>{children}</div>;
+  return <div className={`glass glow min-w-0 rounded-2xl border border-white/5 p-6 ${className}`}>{children}</div>;
 }
 
 export function Field({ label, ...props }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {

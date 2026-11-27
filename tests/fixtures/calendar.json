@@ -1,0 +1,8 @@
+[
+  {"title":"Non-Farm Employment Change","country":"USD","date":"2026-12-04T08:30:00-05:00","impact":"High","forecast":"180K","previous":"150K"},
+  {"title":"CPI y/y","country":"EUR","date":"2026-12-01T05:00:00-05:00","impact":"Medium","forecast":"2.1%","previous":"2.0%"},
+  {"title":"Bank Holiday","country":"JPY","date":"2026-12-02T00:00:00-05:00","impact":"Holiday","forecast":"","previous":""},
+  {"title":"","country":"USD","date":"2026-12-02T08:30:00-05:00","impact":"High"},
+  {"title":"Bad date","country":"USD","date":"pas une date","impact":"High"},
+  {"title":"Crude Oil Inventories","country":"USD","date":"2026-12-03T10:30:00-05:00","impact":"Low","forecast":"-1.2M","previous":"0.8M"}
+]
