@@ -48,6 +48,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <p className="text-muted">Ton offre</p>
           <p className={`mt-0.5 font-semibold ${plan.tone}`}>{plan.label}</p>
         </Link>
+        <Link href="/a-propos" className="mb-2 block px-1 text-xs text-muted hover:text-foreground">
+          À propos de Capital Tracker
+        </Link>
         <div className="flex items-center justify-between gap-2 border-t border-white/5 pt-3 text-sm">
           <span className="truncate text-muted">@{profile?.username}</span>
           <form action={signOut}>

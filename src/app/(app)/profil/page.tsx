@@ -20,6 +20,9 @@ export default async function ProfilePage() {
         <span className="font-mono text-foreground">{profile.referral_code}</span>
       </p>
       <ProfileForm profile={profile} />
+      <a href="/a-propos" className="block text-sm text-muted underline hover:text-foreground">
+        À propos de Capital Tracker
+      </a>
     </div>
   );
 }
