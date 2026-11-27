@@ -82,6 +82,7 @@ export async function saveTrade(_: FormState, fd: FormData): Promise<FormState> 
     session: text(fd, "session"),
     setup: text(fd, "setup"),
     emotions: fd.getAll("emotions").map(String),
+    mistakes: fd.getAll("mistakes").map(String),
     followed_plan: followed === "oui" ? true : followed === "non" ? false : null,
     notes: text(fd, "notes"),
     screenshots,

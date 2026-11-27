@@ -2,7 +2,7 @@ export const SESSIONS = ["Asie", "Londres", "New York", "Chevauchement Londres/N
 export const EMOTIONS = ["Calme", "Confiant", "Impatient", "Peur", "Avidité", "Frustration", "Revanche", "Fatigue"] as const;
 
 export const TRADE_COLUMNS =
-  "id, symbol, direction, status, entry_price, exit_price, stop_loss, take_profit, lot_size, pnl, fees, risk_amount, opened_at, closed_at, setup, session, emotions, followed_plan, notes, screenshots";
+  "id, symbol, direction, status, entry_price, exit_price, stop_loss, take_profit, lot_size, pnl, fees, risk_amount, opened_at, closed_at, setup, session, emotions, followed_plan, mistakes, notes, screenshots";
 
 export function formatMoney(n: number | null | undefined) {
   if (n === null || n === undefined) return "–";
@@ -13,3 +13,16 @@ export function formatDate(iso: string | null | undefined) {
   if (!iso) return "–";
   return new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
 }
+
+export const MISTAKES = [
+  "Entrée trop tôt",
+  "Entrée tardive (FOMO)",
+  "Pas de stop loss",
+  "Stop déplacé",
+  "Sortie trop tôt",
+  "Taille de position trop grosse",
+  "Trade hors plan",
+  "Trade de revanche",
+  "Trading pendant une news",
+  "Surtrading",
+] as const;

@@ -27,6 +27,9 @@ export default function Home() {
         >
           Commencer maintenant
         </Link>
+        <Link href="/demo" className="ml-3 mt-8 inline-block rounded-lg border border-border px-6 py-3 font-semibold hover:border-accent">
+          Voir la démo
+        </Link>
       </section>
       <section className="mt-20 grid gap-4 sm:grid-cols-2">
         {FEATURES.map((f) => (
